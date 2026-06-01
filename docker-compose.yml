@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: beneficio_social_postgress
+    restart: always
+    environment:
+      POSTGRES_DB: beneficio_social
+      POSTGRES_USER: beneficio_app
+      POSTGRES_PASSWORD: beneficio_app_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - beneficio_social_pgdata:/var/lib/postgresql/data
+
+volumes:
+  beneficio_social_pgdata:
