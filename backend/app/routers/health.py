@@ -14,11 +14,11 @@ router = APIRouter(
 def health_check():
     return {
         "status": "ok",
-        "service": "Beneficio Social API"
+        "service": "Beneficio Social API" # Validar API
     }
 
 
-@router.get("/db")
+@router.get("/db") 
 def database_health_check():
     db = SessionLocal()
 
@@ -26,7 +26,7 @@ def database_health_check():
         db.execute(text("SELECT 1"))
         return {
             "status": "ok",
-            "database": "connected"
+            "database": "connected" # Validar API x DB
         }
     finally:
         db.close()
