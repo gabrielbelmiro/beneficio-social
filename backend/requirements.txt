@@ -9,3 +9,5 @@ passlib[bcrypt]
 python-jose[cryptography]
 python-multipart
 prometheus-client
+email-validator
+bcrypt==5.0.0
