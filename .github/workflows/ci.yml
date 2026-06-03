@@ -42,6 +42,16 @@ jobs:
           JWT_SECRET: fake_secret_for_ci
         run: |
           python -c "from app.main import app; print(app.title)"
+      - name: Run backend tests
+        working-directory: backend
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_NAME: beneficio_social
+          DB_USER: beneficio_app
+          DB_PASSWORD: fake_password_for_ci
+          JWT_SECRET: fake_secret_for_ci
+        run: pytest
 
   frontend:
     name: Frontend - Angular

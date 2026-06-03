@@ -18,10 +18,8 @@ def extract_income(text: str) -> Decimal | None:
         r"total[:\s]*R?\$?\s*([\d\.]+,\d{2})"
     ]
 
-    lower_text = text.lower()
-
     for pattern in patterns:
-        match = re.search(pattern, lower_text)
+        match = re.search(pattern, text, re.IGNORECASE)
 
         if match:
             return normalize_money(match.group(1))

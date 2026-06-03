@@ -14,3 +14,4 @@ bcrypt==5.0.0
 pytesseract
 Pillow
 pdfplumber
+pytest
