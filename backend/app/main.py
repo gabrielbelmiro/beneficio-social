@@ -10,7 +10,8 @@ from app.routers import (
     rpa,
     metrics,
     document_analysis,
-    manual_reviews
+    manual_reviews,
+    rpa_queue
 )
 
 
@@ -27,6 +28,7 @@ app.include_router(clients.router)
 app.include_router(documents.router)
 app.include_router(document_analysis.router)
 app.include_router(manual_reviews.router)
+app.include_router(rpa_queue.router)
 
 @app.get("/")
 def root():

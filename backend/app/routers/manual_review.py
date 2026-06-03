@@ -14,6 +14,8 @@ from app.schemas.manual_review import (
 from app.security.dependencies import get_current_user
 from app.logging.logger import get_logger
 
+from app.services.rpa_queue_service import enqueue_client_for_rpa
+
 
 router = APIRouter(
     prefix="/manual-reviews",
@@ -78,6 +80,8 @@ def decide_manual_review(
     review.reviewed_at = datetime.now(timezone.utc)
 
     client.benefit_eligible = payload.final_decision == "APPROVED"
+    if payload.final_decision == "APPROVED":
+        enqueue_client_for_rpa(db=db, client=client)
 
     db.commit()
     db.refresh(review)
