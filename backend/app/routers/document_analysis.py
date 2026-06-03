@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.db.database import get_db
 from app.models.document import Document
+from app.models.manual_review import ManualReview
 from app.models.user import User
 from app.schemas.document_analysis import DocumentAnalysisResponse
 from app.security.dependencies import get_current_user
@@ -40,6 +41,22 @@ def analyze_document(
         )
 
         result = classify_income(extracted_text)
+
+        if result["status"] == "INCONCLUSIVE":
+            review = ManualReview(
+                document_id=document.id,
+                client_id=document.client_id,
+                status="PENDING",
+                ai_reason=result["reason"]
+            )
+
+            db.add(review)
+            db.commit()
+
+            logger.info(
+                f"Documento enviado para revisão humana. "
+                f"document_id={document.id} client_id={document.client_id}"
+            )
 
         logger.info(
             f"Documento analisado. document_id={document.id} "
