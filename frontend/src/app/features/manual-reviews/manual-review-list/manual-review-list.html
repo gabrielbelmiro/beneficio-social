@@ -1,0 +1,45 @@
+<section class="page">
+  <div class="page-header">
+    <h1>Revisão Humana</h1>
+    <p>Casos inconclusivos que precisam de validação manual.</p>
+  </div>
+
+  <p *ngIf="loading">Carregando revisões...</p>
+
+  <table *ngIf="!loading && reviews.length > 0" border="1" cellpadding="8">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Documento</th>
+        <th>Cliente</th>
+        <th>Motivo IA/OCR</th>
+        <th>Motivo Manual</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let review of reviews">
+        <td>{{ review.id }}</td>
+        <td>{{ review.document_id }}</td>
+        <td>{{ review.client_id }}</td>
+        <td>{{ review.ai_reason }}</td>
+        <td>
+          <input
+            type="text"
+            [(ngModel)]="reasons[review.id]"
+            placeholder="Descreva o motivo da decisão"
+          />
+        </td>
+        <td>
+          <button (click)="decide(review, 'APPROVED')">Aprovar</button>
+          <button (click)="decide(review, 'REJECTED')">Reprovar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!loading && reviews.length === 0">
+    Nenhuma revisão pendente.
+  </p>
+</section>

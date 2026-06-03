@@ -1,0 +1,40 @@
+<section class="page">
+  <div class="page-header">
+    <h1>Auditoria</h1>
+    <p>Histórico das principais ações executadas no sistema.</p>
+  </div>
+
+  <p *ngIf="loading">Carregando auditoria...</p>
+
+  <table *ngIf="!loading && logs.length > 0" border="1" cellpadding="8">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Usuário</th>
+        <th>Ação</th>
+        <th>Recurso</th>
+        <th>ID</th>
+        <th>Status</th>
+        <th>Execution ID</th>
+        <th>Detalhes</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let log of logs">
+        <td>{{ log.created_at }}</td>
+        <td>{{ log.user_email }}</td>
+        <td>{{ log.action }}</td>
+        <td>{{ log.resource_type }}</td>
+        <td>{{ log.resource_id }}</td>
+        <td>{{ log.status }}</td>
+        <td>{{ log.execution_id }}</td>
+        <td>{{ log.details }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!loading && logs.length === 0">
+    Nenhum registro de auditoria encontrado.
+  </p>
+</section>
