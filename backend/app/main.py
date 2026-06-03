@@ -6,7 +6,10 @@ from app.routers import (
     health,
     auth,
     clients,
-    documents
+    documents,
+    rpa,
+    metrics,
+    document_analysis
 )
 
 
@@ -21,7 +24,7 @@ app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(clients.router)
 app.include_router(documents.router)
-
+app.include_router(document_analysis.router)
 
 @app.get("/")
 def root():

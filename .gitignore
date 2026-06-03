@@ -33,6 +33,11 @@ documents/
 *.pdf
 *.png
 
+# Sensitive documents
 uploads/
 *.pdf
 *.png
+
+# Logs
+logs/
+*.log
