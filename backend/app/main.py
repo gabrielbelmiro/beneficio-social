@@ -1,7 +1,12 @@
 from fastapi import FastAPI
 
 from app.core.config import settings
-from app.routers import health, auth, clients
+from app.routers import (
+    health,
+    auth,
+    clients,
+    documents
+)
 
 
 app = FastAPI(
@@ -12,6 +17,7 @@ app = FastAPI(
 app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(clients.router)
+app.include_router(documents.router)
 
 
 @app.get("/")
