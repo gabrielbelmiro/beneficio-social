@@ -50,6 +50,7 @@ def process_next_job() -> bool:
         if not client:
             job.status = "FAILED"
             job.finished_at = datetime.now(timezone.utc)
+            job.error_message = "Cliente não encontrado"
             db.commit()
             logger.error(f"Job RPA falhou: cliente não encontrado. job_id={job.id}")
             return True
@@ -57,6 +58,7 @@ def process_next_job() -> bool:
         if not client.benefit_eligible:
             job.status = "FAILED"
             job.finished_at = datetime.now(timezone.utc)
+            job.error_message = "Cliente não elegível para benefício"
             db.commit()
             logger.error(
                 f"Job RPA falhou: cliente não elegível. "
