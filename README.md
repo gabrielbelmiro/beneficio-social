@@ -179,9 +179,15 @@ cd beneficio-social-rpa
 2. Subir ambiente Docker
 docker compose up -d --build
 
-3. Criar tabelas
+3. Criar tabelas 
+Opção 1 # (atual ALembic)
 cd backend
+alembic upgrade head
+
+Opção 2 # (Legado)
+cd backend/scripts/
 python create_tables.py
+
 
 4. Criar usuário admin
 python create_admin.py

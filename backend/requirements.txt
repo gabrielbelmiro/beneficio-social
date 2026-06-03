@@ -16,3 +16,4 @@ Pillow
 pdfplumber
 pytest
 httpx
+alembic
