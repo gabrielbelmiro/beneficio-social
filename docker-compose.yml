@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16
-    container_name: beneficio_social_postgress
+    container_name: beneficio_social_postgres
     restart: always
     environment:
       POSTGRES_DB: beneficio_social
@@ -11,6 +11,50 @@ services:
       - "5432:5432"
     volumes:
       - beneficio_social_pgdata:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.worker
+    container_name: beneficio_social_api
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      APP_NAME: Beneficio Social
+      APP_ENV: dev
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: beneficio_social
+      DB_USER: beneficio_app
+      DB_PASSWORD: beneficio_app_dev_password
+      JWT_SECRET: dev_secret_change_me
+    ports:
+      - "8000:8000"
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+  rpa_worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.worker
+    container_name: beneficio_social_rpa_worker
+    restart: always
+    depends_on:
+      - postgres
+      - api
+    environment:
+      APP_NAME: Beneficio Social
+      APP_ENV: dev
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: beneficio_social
+      DB_USER: beneficio_app
+      DB_PASSWORD: beneficio_app_dev_password
+      JWT_SECRET: dev_secret_change_me
+      RPA_QUEUE_POLL_INTERVAL_SECONDS: 10
+    volumes:
+      - ./backend/logs:/app/logs
+      - ./worker:/worker
 
 volumes:
   beneficio_social_pgdata:
