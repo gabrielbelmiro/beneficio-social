@@ -9,7 +9,8 @@ from app.routers import (
     documents,
     document_analysis,
     manual_review,
-    rpa_queue
+    rpa_queue,
+    audit_logs
 )
 
 
@@ -27,6 +28,7 @@ app.include_router(documents.router)
 app.include_router(document_analysis.router)
 app.include_router(manual_review.router)
 app.include_router(rpa_queue.router)
+app.include_router(audit_logs.router)
 
 @app.get("/")
 def root():

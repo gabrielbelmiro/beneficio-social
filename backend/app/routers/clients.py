@@ -1,13 +1,15 @@
 from decimal import Decimal
-from app.logging.logger import get_logger
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
+from app.logging.logger import get_logger
 from app.models.client import Client
 from app.models.user import User
 from app.schemas.client import ClientCreate, ClientResponse, ClientUpdate
 from app.security.dependencies import get_current_user
+from app.services.audit_service import create_audit_log
 from app.services.phone_formatter import format_brazilian_phone
 
 
@@ -17,7 +19,6 @@ router = APIRouter(
 )
 
 logger = get_logger(__name__)
-
 
 BENEFIT_INCOME_LIMIT = Decimal("2500.00")
 
@@ -52,6 +53,16 @@ def create_client(
     db.add(client)
     db.commit()
     db.refresh(client)
+
+    create_audit_log(
+        db=db,
+        user=current_user,
+        action="CREATE_CLIENT",
+        resource_type="CLIENT",
+        resource_id=str(client.id),
+        status="SUCCESS",
+        details=f"Cliente criado. eligible={client.benefit_eligible}"
+    )
 
     logger.info(
         f"Cliente criado com sucesso. client_id={client.id}"
@@ -124,10 +135,21 @@ def update_client(
 
     db.commit()
     db.refresh(client)
+
+    create_audit_log(
+        db=db,
+        user=current_user,
+        action="UPDATE_CLIENT",
+        resource_type="CLIENT",
+        resource_id=str(client.id),
+        status="SUCCESS",
+        details="Cliente atualizado"
+    )
+
     logger.info(
         f"Cliente atualizado com sucesso. client_id={client.id}"
     )
-    
+
     return client
 
 
@@ -145,11 +167,23 @@ def delete_client(
             detail="Cliente não encontrado"
         )
 
+    client_id_deleted = client.id
+
     db.delete(client)
     db.commit()
 
+    create_audit_log(
+        db=db,
+        user=current_user,
+        action="DELETE_CLIENT",
+        resource_type="CLIENT",
+        resource_id=str(client_id_deleted),
+        status="SUCCESS",
+        details="Cliente removido"
+    )
+
     logger.info(
-        f"Cliente removido com sucesso. client_id={client.id}"
+        f"Cliente removido com sucesso. client_id={client_id_deleted}"
     )
 
     return None
