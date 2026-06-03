@@ -1,5 +1,5 @@
 from decimal import Decimal
-
+from app.logging.logger import get_logger
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -15,6 +15,8 @@ router = APIRouter(
     prefix="/clients",
     tags=["Clients"]
 )
+
+logger = get_logger(__name__)
 
 
 BENEFIT_INCOME_LIMIT = Decimal("2500.00")
@@ -50,6 +52,10 @@ def create_client(
     db.add(client)
     db.commit()
     db.refresh(client)
+
+    logger.info(
+        f"Cliente criado com sucesso. client_id={client.id}"
+    )
 
     return client
 
@@ -118,7 +124,10 @@ def update_client(
 
     db.commit()
     db.refresh(client)
-
+    logger.info(
+        f"Cliente atualizado com sucesso. client_id={client.id}"
+    )
+    
     return client
 
 
@@ -138,5 +147,9 @@ def delete_client(
 
     db.delete(client)
     db.commit()
+
+    logger.info(
+        f"Cliente removido com sucesso. client_id={client.id}"
+    )
 
     return None

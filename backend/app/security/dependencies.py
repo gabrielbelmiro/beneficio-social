@@ -3,6 +3,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
+from app.logging.context import set_execution_context
 from app.models.user import User
 from app.security.jwt import decode_access_token
 
@@ -31,5 +32,7 @@ def get_current_user(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Usuário não encontrado"
         )
+
+    set_execution_context(user_email=user.email)
 
     return user
